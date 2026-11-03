@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { Check, ChevronRight, Clipboard, Code2, Copy, Gamepad2, GitBranch, ShieldCheck, Sparkles, Zap } from 'lucide-react'
 
-const SCRIPT = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Opex-Hub/Opex-Hub/refs/heads/main/MM2"))()'
+const SCRIPT = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Opex-Hub/Opex-Hub/refs/heads/main/Main"))()'
 
 const games = [
   { number: '01', name: 'MM2', category: 'Action · PvP', accent: 'violet', icon: '◆', image: '/games/mm2.png', users: 0, updating: true },
