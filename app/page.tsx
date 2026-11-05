@@ -6,6 +6,7 @@ import { Check, ChevronRight, Clipboard, Code2, Copy, Gamepad2, GitBranch, Shiel
 
 const SCRIPT = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Opex-Hub/Opex-Hub/refs/heads/main/Main"))()'
 const MM2_SCRIPT = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Opex-Hub/Opex-Hub/refs/heads/main/MM2"))()'
+const ALL_SCRIPTS = `${SCRIPT}\n\n${MM2_SCRIPT}`
 
 const games = [
   { number: '01', name: 'MM2', category: 'Action · PvP', accent: 'violet', icon: '◆', image: '/games/mm2.png', users: 1032, updating: false },
@@ -47,7 +48,7 @@ export default function Page() {
           <a href="#about" className="transition-colors hover:text-white">About</a>
           <a href="https://github.com/Opex-Hub/Opex-Hub" target="_blank" rel="noreferrer" className="flex items-center gap-2 transition-colors hover:text-white"><GitBranch /> GitHub</a>
         </div>
-        <button onClick={() => setShowScript(true)} className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/[.06] px-4 py-2 text-xs font-semibold text-zinc-200 transition-all hover:border-violet-400/50 hover:bg-violet-500/10 sm:flex">Get script <ChevronRight /></button>
+        <button onClick={() => openScript(ALL_SCRIPTS)} className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/[.06] px-4 py-2 text-xs font-semibold text-zinc-200 transition-all hover:border-violet-400/50 hover:bg-violet-500/10 sm:flex">Get script <ChevronRight /></button>
       </header>
 
       <section id="top" className="relative z-10 mx-auto max-w-6xl px-5 pb-20 pt-16 sm:px-8 sm:pb-28 sm:pt-24">
