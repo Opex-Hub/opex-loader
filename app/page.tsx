@@ -64,9 +64,9 @@ export default function Page() {
           <a href="#about" onClick={(event) => { event.preventDefault(); setShowAbout(true) }} className="transition-colors hover:text-white">About</a>
           <a href="https://github.com/Opex-Hub/Opex-Hub" target="_blank" rel="noreferrer" className="flex items-center gap-2 transition-colors hover:text-white"><GitBranch /> GitHub</a>
         </div>
-        <div className="hidden items-center gap-2 sm:flex">
+        <div className="flex items-center gap-2">
           <button onClick={() => setShowPremium(true)} className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/[.08] px-4 py-2 text-xs font-semibold text-amber-100 transition-all hover:border-amber-200/50 hover:bg-amber-300/[.14]"><KeyRound /> Premium keys</button>
-          <button onClick={() => openScript(ALL_SCRIPTS)} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[.06] px-4 py-2 text-xs font-semibold text-zinc-200 transition-all hover:border-violet-400/50 hover:bg-violet-500/10">Get script <ChevronRight /></button>
+          <button onClick={() => openScript(ALL_SCRIPTS)} className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/[.06] px-4 py-2 text-xs font-semibold text-zinc-200 transition-all hover:border-violet-400/50 hover:bg-violet-500/10 sm:inline-flex">Get script <ChevronRight /></button>
         </div>
       </header>
 
