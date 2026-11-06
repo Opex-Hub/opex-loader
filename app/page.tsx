@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-import { Check, ChevronRight, Clipboard, Code2, Copy, Gamepad2, GitBranch, ShieldCheck, Sparkles, Zap } from 'lucide-react'
+import { Check, ChevronRight, Clipboard, Code2, Copy, ExternalLink, Gamepad2, GitBranch, KeyRound, ShieldCheck, Sparkles, Zap } from 'lucide-react'
 
 const SCRIPT = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Opex-Hub/Opex-Hub/refs/heads/main/Main"))()'
 const MM2_SCRIPT = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Opex-Hub/Opex-Hub/refs/heads/main/MM2"))()'
@@ -19,12 +19,27 @@ const games = [
 export default function Page() {
   const [showScript, setShowScript] = useState(false)
   const [showAbout, setShowAbout] = useState(false)
+  const [showPremium, setShowPremium] = useState(false)
+  const [orderNumber, setOrderNumber] = useState('')
   const [selectedScript, setSelectedScript] = useState(SCRIPT)
   const [copied, setCopied] = useState(false)
 
   function openScript(script: string) {
     setSelectedScript(script)
     setShowScript(true)
+  }
+
+  async function startOrder(plan: string) {
+    const suffix = Math.random().toString(36).slice(2, 8).toUpperCase()
+    const newOrderNumber = `opex-example-${plan.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${suffix}`
+    setOrderNumber(newOrderNumber)
+    setShowPremium(false)
+
+    await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderNumber: newOrderNumber, plan }),
+    }).catch(() => undefined)
   }
 
   async function copyScript() {
@@ -49,7 +64,10 @@ export default function Page() {
           <a href="#about" onClick={(event) => { event.preventDefault(); setShowAbout(true) }} className="transition-colors hover:text-white">About</a>
           <a href="https://github.com/Opex-Hub/Opex-Hub" target="_blank" rel="noreferrer" className="flex items-center gap-2 transition-colors hover:text-white"><GitBranch /> GitHub</a>
         </div>
-        <button onClick={() => openScript(ALL_SCRIPTS)} className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/[.06] px-4 py-2 text-xs font-semibold text-zinc-200 transition-all hover:border-violet-400/50 hover:bg-violet-500/10 sm:flex">Get script <ChevronRight /></button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setShowPremium(true)} className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/[.08] px-4 py-2 text-xs font-semibold text-amber-100 transition-all hover:border-amber-200/50 hover:bg-amber-300/[.14]"><KeyRound /> Premium keys</button>
+          <button onClick={() => openScript(ALL_SCRIPTS)} className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/[.06] px-4 py-2 text-xs font-semibold text-zinc-200 transition-all hover:border-violet-400/50 hover:bg-violet-500/10 sm:inline-flex">Get script <ChevronRight /></button>
+        </div>
       </header>
 
       <section id="top" className="relative z-10 mx-auto max-w-6xl px-5 pb-20 pt-16 sm:px-8 sm:pb-28 sm:pt-24">
@@ -74,6 +92,10 @@ export default function Page() {
       </section>
 
       <footer id="about" className="relative z-10 border-t border-white/10"><div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-7 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between sm:px-8"><span className="font-semibold text-zinc-300">opex<span className="text-violet-400">.</span></span><span>Made for the community · Not affiliated with Roblox</span><span className="flex items-center gap-1.5"><Gamepad2 /> Play smart.</span></div></footer>
+
+      {showPremium && <div role="dialog" aria-modal="true" aria-labelledby="premium-title" className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-5 backdrop-blur-md" onClick={() => setShowPremium(false)}><div className="max-h-[88vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-amber-300/20 bg-[#13131a] p-6 shadow-2xl shadow-amber-950/30 sm:p-8" onClick={(event) => event.stopPropagation()}><div className="mb-6 flex items-start justify-between"><div><p className="mb-1 text-xs font-semibold uppercase tracking-[.18em] text-amber-200">Opex premium access</p><h2 id="premium-title" className="text-2xl font-semibold tracking-tight">Choose your key.</h2><p className="mt-2 max-w-xl text-sm leading-6 text-zinc-400">Premium keys extend script access from 10 days to 1 year. Choose a plan, then complete your order in Discord.</p></div><button onClick={() => setShowPremium(false)} aria-label="Close premium dialog" className="text-2xl leading-none text-zinc-500 hover:text-white">×</button></div><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{[{ name: '10 days', price: '$1.00', alt: 'WebMoney, in-game items, or crypto' }, { name: '30 days', price: '$2.00', alt: 'WebMoney, in-game items, or crypto' }, { name: '90 days', price: '$4.00', alt: 'WebMoney, in-game items, or crypto' }, { name: '6 months', price: '$7.00', alt: 'WebMoney, in-game items, or crypto' }, { name: '1 year', price: '$10.00', alt: 'WebMoney, in-game items, or crypto' }].map((plan) => <div key={plan.name} className="rounded-xl border border-white/10 bg-white/[.04] p-4 transition hover:border-amber-200/40 hover:bg-amber-200/[.06]"><div className="mb-4 flex items-center justify-between"><h3 className="font-semibold text-zinc-100">{plan.name}</h3><KeyRound className="text-amber-200" /></div><p className="text-lg font-bold text-amber-100">{plan.price}</p><p className="mt-1 text-xs text-zinc-500">{plan.alt}</p><button onClick={() => startOrder(plan.name)} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-amber-200 px-3 py-2 text-xs font-bold text-black transition hover:bg-amber-100">Order <ChevronRight /></button></div>)}</div><p className="mt-6 text-center text-[11px] leading-5 text-zinc-500">Payments and delivery are handled by the Opex team. Never share your Roblox password or executor credentials.</p></div></div>}
+
+      {orderNumber && <div role="dialog" aria-modal="true" aria-labelledby="order-title" className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-5 backdrop-blur-md"><div className="w-full max-w-md rounded-2xl border border-violet-300/20 bg-[#13131a] p-6 text-center shadow-2xl shadow-violet-950/30"><p className="mb-2 text-xs font-semibold uppercase tracking-[.18em] text-violet-300">Order started</p><h2 id="order-title" className="text-2xl font-semibold">Remember this order number</h2><p className="mt-3 rounded-xl border border-white/10 bg-black/40 px-4 py-4 font-mono text-sm text-cyan-200">{orderNumber}</p><p className="mt-4 text-sm leading-6 text-zinc-400">Keep this number safe, then join Discord to finish your order.</p><a href="https://discord.gg/WHmJrzXqSK" target="_blank" rel="noreferrer" className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-violet-200 py-3 text-sm font-bold text-black transition hover:bg-violet-100">Get to Discord <ExternalLink /></a><button onClick={() => setOrderNumber('')} className="mt-3 text-xs text-zinc-500 hover:text-white">Close</button></div></div>}
 
       {showAbout && <div role="dialog" aria-modal="true" aria-labelledby="about-title" className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-5 backdrop-blur-md" onClick={() => setShowAbout(false)}><div className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/15 bg-[#13131a] p-6 shadow-2xl shadow-violet-950/30 sm:p-8" onClick={(event) => event.stopPropagation()}><div className="mb-6 flex items-start justify-between"><div><p className="mb-1 text-xs font-semibold uppercase tracking-[.18em] text-violet-300">About Opex Hub</p><h2 id="about-title" className="text-2xl font-semibold tracking-tight">Scripts built for the community.</h2></div><button onClick={() => setShowAbout(false)} aria-label="Close about dialog" className="text-2xl leading-none text-zinc-500 hover:text-white">×</button></div><div className="flex flex-col gap-5 text-sm leading-7 text-zinc-400"><p>Welcome to Opex Hub — your home for clean, reliable, and free Roblox scripts.</p><p>We build high-quality script hubs that are easy to use and constantly improved. Whether you are here for MM2, +1 Wings For Brainrot, Climb and Jump Tower, Grow A Garden, or Just An Innocent Game, our loaders are designed to get you in fast with minimal hassle.</p><div><h3 className="mb-2 font-semibold text-zinc-100">What we offer</h3><ul className="flex flex-col gap-1"><li>Free scripts with no paywalls or key systems unless explicitly stated.</li><li>Frequent updates as games patch.</li><li>Safety first: no obfuscated malware, suspicious redirects, or data collection.</li><li>Multi-game support with one hub and consistent experience.</li><li>Community-driven support, suggestions, and early access.</li></ul></div><div><h3 className="mb-2 font-semibold text-zinc-100">How to use</h3><p>Click Get script on any live game, copy the loadstring, then paste it into your executor and run.</p></div><div className="rounded-xl border border-amber-300/15 bg-amber-300/[.05] p-4 text-amber-100/80"><h3 className="mb-1 font-semibold text-amber-200">Important</h3><p>Use scripts at your own risk. We are not responsible for bans or account issues. Only download from official Opex Hub sources, and use scripts responsibly where they are allowed.</p></div><p>MM2 is now live — no more waiting. Grab the loader and stay tuned for more games and features.</p><p>Thanks for choosing Opex Hub.<br />— The Opex Hub Team</p></div></div></div>}
 
