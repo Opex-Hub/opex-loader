@@ -29,10 +29,17 @@ export default function Page() {
     setShowScript(true)
   }
 
-  function startOrder(plan: string) {
+  async function startOrder(plan: string) {
     const suffix = Math.random().toString(36).slice(2, 8).toUpperCase()
-    setOrderNumber(`opex-example-${plan.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${suffix}`)
+    const newOrderNumber = `opex-example-${plan.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${suffix}`
+    setOrderNumber(newOrderNumber)
     setShowPremium(false)
+
+    await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderNumber: newOrderNumber, plan }),
+    }).catch(() => undefined)
   }
 
   async function copyScript() {
