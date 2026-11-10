@@ -1,29 +1,34 @@
 import { NextRequest } from 'next/server'
 
-const MODEL = 'gemini-2.5-flash'
+const MODEL = 'meta-llama/llama-3.3-8b-instruct:free'
 
 function promptFor(description: string) {
   return `You are an expert Luau and Lua configuration engineer. Generate a customized configuration script for this request:\n\n${description}\n\nRequirements:\n- Return only valid Luau/Lua source code, with no Markdown fences or explanation.\n- Prefer a clear Config table with sensible defaults and comments only where useful.\n- Keep the result self-contained and safe: do not include credential theft, destructive behavior, exploits, malware, or code that bypasses access controls.\n- Match the requested features precisely and use idiomatic Luau where appropriate.`
 }
 
 async function generate(description: string) {
-  const apiKey = process.env.GEMINI_API_KEY
-  if (!apiKey) return new Response('GEMINI_API_KEY is not configured.', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
+  const apiKey = process.env.OPENROUTER_API_KEY
+  if (!apiKey) return new Response('OPENROUTER_API_KEY is not configured.', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
 
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`, {
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents: [{ parts: [{ text: promptFor(description) }] }], generationConfig: { temperature: 0.35, maxOutputTokens: 1800 } }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+      'HTTP-Referer': 'https://v0.app',
+      'X-Title': 'ConfigLab',
+    },
+    body: JSON.stringify({ model: MODEL, messages: [{ role: 'user', content: promptFor(description) }], temperature: 0.35, max_tokens: 1800 }),
   })
 
   const payload = await response.json()
   if (!response.ok) {
-    const message = payload?.error?.message || 'Gemini could not generate a configuration.'
+    const message = payload?.error?.message || 'The free model could not generate a configuration.'
     return new Response(message, { status: response.status, headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
   }
 
-  const text = payload?.candidates?.[0]?.content?.parts?.map((part: { text?: string }) => part.text || '').join('').trim()
-  if (!text) return new Response('Gemini returned an empty configuration.', { status: 502, headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
+  const text = payload?.choices?.[0]?.message?.content?.trim()
+  if (!text) return new Response('The free model returned an empty configuration.', { status: 502, headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
   return new Response(text.replace(/^```(?:lua|luau)?\s*/i, '').replace(/\s*```$/i, ''), { headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' } })
 }
 
