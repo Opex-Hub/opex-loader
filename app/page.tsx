@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Check, ChevronRight, Clipboard, Code2, Copy, ExternalLink, Gamepad2, GitBranch, KeyRound, LoaderCircle, ShieldCheck, Sparkles, Zap } from 'lucide-react'
 
 const SCRIPT = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Opex-Hub/Opex-Hub/refs/heads/main/Main"))()'
@@ -16,7 +16,36 @@ const games = [
   { number: '05', name: 'Just An Innocent Game', category: 'Adventure · Chaos', accent: 'pink', icon: '◉', image: '/games/mm2.png', users: 204 },
 ]
 
+function CustomCursor() {
+  const cursorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)')
+    if (!finePointer.matches) return
+
+    const moveCursor = (event: PointerEvent) => {
+      if (!cursorRef.current) return
+      cursorRef.current.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`
+      cursorRef.current.classList.toggle('is-hovering', Boolean((event.target as HTMLElement).closest('a, button')))
+    }
+    const pressCursor = () => cursorRef.current?.classList.add('is-pressed')
+    const releaseCursor = () => cursorRef.current?.classList.remove('is-pressed')
+
+    window.addEventListener('pointermove', moveCursor)
+    window.addEventListener('pointerdown', pressCursor)
+    window.addEventListener('pointerup', releaseCursor)
+    return () => {
+      window.removeEventListener('pointermove', moveCursor)
+      window.removeEventListener('pointerdown', pressCursor)
+      window.removeEventListener('pointerup', releaseCursor)
+    }
+  }, [])
+
+  return <div ref={cursorRef} className="custom-cursor" aria-hidden="true"><span /></div>
+}
+
 export default function Page() {
+  const [showIntro, setShowIntro] = useState(true)
   const [showScript, setShowScript] = useState(false)
   const [showAbout, setShowAbout] = useState(false)
   const [showPremium, setShowPremium] = useState(false)
@@ -24,6 +53,46 @@ export default function Page() {
   const [selectedScript, setSelectedScript] = useState(SCRIPT)
   const [copied, setCopied] = useState(false)
   const [executorStatus, setExecutorStatus] = useState<'idle' | 'loading' | 'ready'>('idle')
+  const [introSoundEnabled, setIntroSoundEnabled] = useState(false)
+  const audioContextRef = useRef<AudioContext | null>(null)
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setShowIntro(false), 1900)
+    return () => window.clearTimeout(timer)
+  }, [])
+
+  function playImpact() {
+    const AudioContextConstructor = window.AudioContext
+    if (!AudioContextConstructor) return
+    const context = audioContextRef.current ?? new AudioContextConstructor()
+    audioContextRef.current = context
+    const oscillator = context.createOscillator()
+    const gain = context.createGain()
+    const now = context.currentTime
+    oscillator.type = 'triangle'
+    oscillator.frequency.setValueAtTime(125, now)
+    oscillator.frequency.exponentialRampToValueAtTime(42, now + 0.12)
+    gain.gain.setValueAtTime(0.0001, now)
+    gain.gain.exponentialRampToValueAtTime(0.22, now + 0.012)
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.19)
+    oscillator.connect(gain)
+    gain.connect(context.destination)
+    oscillator.start(now)
+    oscillator.stop(now + 0.2)
+  }
+
+  function toggleIntroSound() {
+    const enableSound = !introSoundEnabled
+    setIntroSoundEnabled(enableSound)
+    if (!enableSound) return
+    const AudioContextConstructor = window.AudioContext
+    if (AudioContextConstructor) {
+      const context = audioContextRef.current ?? new AudioContextConstructor()
+      audioContextRef.current = context
+      void context.resume()
+    }
+    ;[0, 140, 280, 420].forEach((delay) => window.setTimeout(playImpact, delay))
+  }
 
   function openExecutor() {
     if (executorStatus === 'loading') return
@@ -57,6 +126,8 @@ export default function Page() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#09090d] text-white selection:bg-violet-500/30">
+      <CustomCursor />
+      {showIntro && <div className="intro-screen" role="status" aria-label="Opex is loading"><div className="intro-grid" aria-hidden="true" /><div className="intro-content"><div className="intro-kicker"><span className="intro-live-dot" /> SYSTEM INITIALIZING</div><div className="intro-word" aria-label="Opex">{['O', 'P', 'E', 'X'].map((letter, index) => <span key={letter} style={{ '--letter-index': index } as CSSProperties} aria-hidden="true">{letter}</span>)}</div><div className="intro-progress"><span /></div><div className="intro-bottom"><span>LOADING YOUR NEXT SESSION</span><button type="button" onClick={toggleIntroSound} aria-pressed={introSoundEnabled}>{introSoundEnabled ? 'SOUND ON' : 'ENABLE IMPACT SOUND'}</button></div></div></div>}
       <div className="pointer-events-none fixed inset-0 opacity-60 [background-image:linear-gradient(rgba(255,255,255,.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.025)_1px,transparent_1px)] [background-size:56px_56px]" />
       <div className="pointer-events-none fixed left-1/2 top-[-18rem] h-[38rem] w-[38rem] -translate-x-1/2 rounded-full bg-violet-600/15 blur-[130px]" />
       <div className="pointer-events-none fixed bottom-[-20rem] right-[-8rem] h-[34rem] w-[34rem] rounded-full bg-cyan-500/10 blur-[140px]" />
