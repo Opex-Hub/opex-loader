@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-import { Check, ChevronRight, Clipboard, Code2, Copy, ExternalLink, Gamepad2, GitBranch, KeyRound, ShieldCheck, Sparkles, Zap } from 'lucide-react'
+import { Check, ChevronRight, Clipboard, Code2, Copy, ExternalLink, Gamepad2, GitBranch, KeyRound, LoaderCircle, ShieldCheck, Sparkles, Zap } from 'lucide-react'
 
 const SCRIPT = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Opex-Hub/Opex-Hub/refs/heads/main/Main"))()'
 const MM2_SCRIPT = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/Opex-Hub/Opex-Hub/refs/heads/main/MM2"))()'
@@ -23,6 +23,13 @@ export default function Page() {
   const [orderNumber, setOrderNumber] = useState('')
   const [selectedScript, setSelectedScript] = useState(SCRIPT)
   const [copied, setCopied] = useState(false)
+  const [executorStatus, setExecutorStatus] = useState<'idle' | 'loading' | 'ready'>('idle')
+
+  function openExecutor() {
+    if (executorStatus === 'loading') return
+    setExecutorStatus('loading')
+    window.setTimeout(() => setExecutorStatus('ready'), 1100)
+  }
 
   function openScript(script: string) {
     setSelectedScript(script)
@@ -78,6 +85,7 @@ export default function Page() {
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <button onClick={() => setShowScript(true)} className="group inline-flex items-center justify-center gap-3 rounded-xl bg-white px-5 py-3.5 text-sm font-bold text-black transition-all hover:bg-violet-100 hover:shadow-[0_0_28px_rgba(167,139,250,.28)]"><Code2 /> Get script <ChevronRight className="transition-transform group-hover:translate-x-1" /></button>
             <a href="#games" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[.035] px-5 py-3.5 text-sm font-semibold text-zinc-300 transition hover:border-white/25 hover:bg-white/[.07]">Browse games <ChevronRight /></a>
+            <button onClick={openExecutor} disabled={executorStatus === 'loading'} className="inline-flex items-center justify-center gap-2 rounded-xl border border-violet-300/25 bg-violet-400/10 px-5 py-3.5 text-sm font-semibold text-violet-100 transition hover:border-violet-200/50 hover:bg-violet-400/15 disabled:cursor-wait" aria-busy={executorStatus === 'loading'}>{executorStatus === 'loading' ? <><LoaderCircle className="animate-spin" /> Loading executor</> : <>Executor <ChevronRight /></>}</button>
           </div>
         </div>
         <div className="mt-16 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-white/10 pt-5 text-xs text-zinc-500"><span className="flex items-center gap-2"><ShieldCheck className="text-emerald-400" /> Community maintained</span><span className="flex items-center gap-2"><Zap className="text-amber-300" /> Lightweight & fast</span><span className="flex items-center gap-2"><Sparkles className="text-violet-300" /> Updated regularly</span></div>
@@ -92,6 +100,8 @@ export default function Page() {
       </section>
 
       <footer id="about" className="relative z-10 border-t border-white/10"><div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-7 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between sm:px-8"><span className="font-semibold text-zinc-300">opex<span className="text-violet-400">.</span></span><span>Made for the community · Not affiliated with Roblox</span><span className="flex items-center gap-1.5"><Gamepad2 /> Play smart.</span></div></footer>
+
+      {executorStatus === 'ready' && <div role="dialog" aria-modal="true" aria-labelledby="executor-title" className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-5 backdrop-blur-md" onClick={() => setExecutorStatus('idle')}><div className="w-full max-w-sm rounded-2xl border border-violet-300/20 bg-[#13131a] p-7 text-center shadow-2xl shadow-violet-950/30 animate-in fade-in zoom-in-95 duration-200" onClick={(event) => event.stopPropagation()}><div className="mx-auto mb-4 grid size-12 place-items-center rounded-2xl border border-violet-300/20 bg-violet-400/10 text-violet-200"><LoaderCircle className="animate-spin" /></div><p className="mb-2 text-xs font-semibold uppercase tracking-[.18em] text-violet-300">Opex executor</p><h2 id="executor-title" className="text-2xl font-semibold tracking-tight">Coming soon</h2><p className="mt-2 text-sm leading-6 text-zinc-400">We&apos;re getting everything ready. Check back soon.</p><button autoFocus onClick={() => setExecutorStatus('idle')} className="mt-6 w-full rounded-xl bg-white py-3 text-sm font-bold text-black transition hover:bg-violet-100">Got it</button></div></div>}
 
       {showPremium && <div role="dialog" aria-modal="true" aria-labelledby="premium-title" className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-5 backdrop-blur-md" onClick={() => setShowPremium(false)}><div className="max-h-[88vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-amber-300/20 bg-[#13131a] p-6 shadow-2xl shadow-amber-950/30 sm:p-8" onClick={(event) => event.stopPropagation()}><div className="mb-6 flex items-start justify-between"><div><p className="mb-1 text-xs font-semibold uppercase tracking-[.18em] text-amber-200">Opex premium access</p><h2 id="premium-title" className="text-2xl font-semibold tracking-tight">Choose your key.</h2><p className="mt-2 max-w-xl text-sm leading-6 text-zinc-400">Premium keys extend script access from 10 days to 1 year. Choose a plan, then complete your order in Discord.</p></div><button onClick={() => setShowPremium(false)} aria-label="Close premium dialog" className="text-2xl leading-none text-zinc-500 hover:text-white">×</button></div><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{[{ name: '10 days', price: '$1.00', alt: 'WebMoney, in-game items, or crypto' }, { name: '30 days', price: '$2.00', alt: 'WebMoney, in-game items, or crypto' }, { name: '90 days', price: '$4.00', alt: 'WebMoney, in-game items, or crypto' }, { name: '6 months', price: '$7.00', alt: 'WebMoney, in-game items, or crypto' }, { name: '1 year', price: '$10.00', alt: 'WebMoney, in-game items, or crypto' }].map((plan) => <div key={plan.name} className="rounded-xl border border-white/10 bg-white/[.04] p-4 transition hover:border-amber-200/40 hover:bg-amber-200/[.06]"><div className="mb-4 flex items-center justify-between"><h3 className="font-semibold text-zinc-100">{plan.name}</h3><KeyRound className="text-amber-200" /></div><p className="text-lg font-bold text-amber-100">{plan.price}</p><p className="mt-1 text-xs text-zinc-500">{plan.alt}</p><button onClick={() => startOrder(plan.name)} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-amber-200 px-3 py-2 text-xs font-bold text-black transition hover:bg-amber-100">Order <ChevronRight /></button></div>)}</div><p className="mt-6 text-center text-[11px] leading-5 text-zinc-500">Payments and delivery are handled by the Opex team. Never share your Roblox password or executor credentials.</p></div></div>}
 
