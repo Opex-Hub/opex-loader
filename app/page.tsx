@@ -57,7 +57,8 @@ export default function Page() {
   const audioContextRef = useRef<AudioContext | null>(null)
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setShowIntro(false), 1900)
+    const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1200 : 3800
+    const timer = window.setTimeout(() => setShowIntro(false), duration)
     return () => window.clearTimeout(timer)
   }, [])
 
@@ -91,7 +92,7 @@ export default function Page() {
       audioContextRef.current = context
       void context.resume()
     }
-    ;[0, 140, 280, 420].forEach((delay) => window.setTimeout(playImpact, delay))
+    ;[0, 240, 480, 720].forEach((delay) => window.setTimeout(playImpact, delay))
   }
 
   function openExecutor() {
