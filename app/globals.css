@@ -194,7 +194,7 @@
   place-items: center;
   overflow: hidden;
   background: #08080d;
-  animation: intro-screen-exit 550ms cubic-bezier(.7, 0, .2, 1) 1.35s forwards;
+  animation: intro-screen-exit 700ms cubic-bezier(.7, 0, .2, 1) 3.1s forwards;
 }
 
 .intro-grid {
@@ -250,7 +250,7 @@
   background: linear-gradient(145deg, #fff 10%, #d6c5ff 48%, #8b72ff 100%);
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: intro-letter-impact 620ms cubic-bezier(.17,.83,.28,1.28) calc(var(--letter-index) * 125ms) forwards;
+  animation: intro-letter-impact 780ms cubic-bezier(.17,.83,.28,1.28) calc(var(--letter-index) * 250ms) forwards;
 }
 
 .intro-word span:nth-child(1) { --letter-rotation: -18deg; }
@@ -271,7 +271,7 @@
   transform: scaleX(0);
   transform-origin: left;
   background: linear-gradient(90deg, #8b5cf6, #d8b4fe, #67e8f9);
-  animation: intro-progress-fill 1.3s cubic-bezier(.35,0,.2,1) forwards;
+  animation: intro-progress-fill 3.2s cubic-bezier(.35,0,.2,1) forwards;
 }
 
 .intro-bottom {
