@@ -32,13 +32,13 @@ type TabId = 'home' | 'save' | 'search' | 'info'
 
 const snippets = [
   {
-    title: 'Hello, Opex Hub',
+    title: 'Hello, OpexSploit',
     description: 'A tiny starter snippet to make this workspace yours.',
     language: 'Lua',
     updated: 'Just now',
     icon: TerminalSquare,
     tint: 'lavender',
-    code: 'print("Hello, Opex Hub")',
+    code: 'print("Hello, OpexSploit")',
   },
   {
     title: 'Color palette',
@@ -75,7 +75,7 @@ function WindowChrome() {
         <span className={styles.minimizeLight} />
         <span className={styles.expandLight} />
       </div>
-      <div className={styles.chromeTitle}><Grid2X2 size={13} /> Opex Hub</div>
+      <div className={styles.chromeTitle}><Grid2X2 size={13} /> OpexSploit</div>
       <div className={styles.chromeRight}><span className={styles.chromeDot} /> Personal workspace</div>
     </div>
   )
@@ -157,7 +157,7 @@ function SavePanel() {
           <label className={styles.fieldLabel} htmlFor="snippet-title">Snippet name</label>
           <input className={styles.textInput} id="snippet-title" value={title} onChange={(event) => { setTitle(event.target.value); setNotice(false) }} maxLength={60} />
           <div className={styles.editorToolbar}><span><Code2 size={14} /> Editor preview</span><span className={styles.language}><ChevronDown size={12} /> Lua</span></div>
-          <textarea className={styles.codeEditor} aria-label="Sample code editor" spellCheck={false} defaultValue={'-- A friendly little example\nprint("Hello, Opex Hub")\n\n-- This is a visual-only mockup'} />
+          <textarea className={styles.codeEditor} aria-label="Sample code editor" spellCheck={false} defaultValue={'-- A friendly little example\nprint("Hello, OpexSploit")\n\n-- This is a visual-only mockup'} />
           <div className={styles.editorFooter}><span>4 lines</span><span>UTF-8</span><span>Spaces: 2</span><span className={styles.editorReady}><span /> Ready</span></div>
         </div>
         <aside className={styles.editorAside}>
@@ -211,9 +211,9 @@ function InfoPanel() {
         <article className={styles.infoCard}><div className={`${styles.infoIcon} ${styles.infoPurple}`}><Sparkles size={17} /></div><h2>What is this?</h2><p>A visual-only mockup of a personal snippet library, styled like a little macOS app inside your browser.</p></article>
         <article className={styles.infoCard}><div className={`${styles.infoIcon} ${styles.infoMint}`}><ShieldCheck size={17} /></div><h2>Demo by design</h2><p>Buttons and sample content are here to show the interface. Nothing is stored, sent to a server, or executed.</p></article>
         <article className={styles.infoCard}><div className={`${styles.infoIcon} ${styles.infoBlue}`}><Command size={17} /></div><h2>Made for exploring</h2><p>Browse the sample screens, try the search, or open the editor preview. It&apos;s all just for looks.</p></article>
-        <article className={styles.infoCard}><div className={`${styles.infoIcon} ${styles.infoPeach}`}><Gauge size={17} /></div><h2>Version 0.1</h2><p>A small design study from Opex Hub. A little polished, a little playful, and intentionally lightweight.</p></article>
+        <article className={styles.infoCard}><div className={`${styles.infoIcon} ${styles.infoPeach}`}><Gauge size={17} /></div><h2>Version 0.1</h2><p>A small design study from OpexSploit. A little polished, a little playful, and intentionally lightweight.</p></article>
       </div>
-      <div className={styles.infoFoot}><div className={styles.brandMarkSmall}>O</div><span>Designed with a little bit of care.</span><span className={styles.infoVersion}>OPEX HUB · 2026</span></div>
+      <div className={styles.infoFoot}><div className={styles.brandMarkSmall}>O</div><span>Designed with a little bit of care.</span><span className={styles.infoVersion}>OPEXSPLOIT · 2026</span></div>
     </div>
   )
 }
@@ -224,11 +224,11 @@ export default function SecretWorkspace() {
   return (
     <main className={styles.desktop}>
       <div className={styles.desktopGlow} aria-hidden="true" />
-      <section className={styles.window} aria-label="Opex Hub visual workspace">
+      <section className={styles.window} aria-label="OpexSploit visual workspace">
         <WindowChrome />
         <div className={styles.windowBody}>
           <aside className={styles.sidebar}>
-            <div className={styles.brandRow}><div className={styles.brandMark}>O</div><div><strong>OPEX HUB</strong><span>YOUR PERSONAL SPACE</span></div></div>
+            <div className={styles.brandRow}><div className={styles.brandMark}>O</div><div><strong>OPEXSPLOIT</strong><span>YOUR PERSONAL SPACE</span></div></div>
             <div className={styles.workspacePicker}><div className={styles.workspaceAvatar}>M</div><div className={styles.workspaceName}><strong>My workspace</strong><span>Personal</span></div><ChevronDown size={14} /></div>
             <span className={styles.navLabel}>WORKSPACE</span>
             <nav className={styles.navList} aria-label="Workspace sections">
@@ -240,7 +240,7 @@ export default function SecretWorkspace() {
             </nav>
             <div className={styles.sidebarSpacer} />
             <div className={styles.sidebarTip}><div className={styles.tipOrb}><Sparkles size={14} /></div><strong>Keep it simple</strong><p>Your best ideas don&apos;t need to be complicated.</p><span className={styles.tipRule} /></div>
-            <button className={styles.profileButton} type="button"><div className={styles.profileAvatar}>OH</div><div className={styles.profileText}><strong>Opex Hub</strong><span>Visual demo</span></div><Settings2 size={15} /></button>
+            <button className={styles.profileButton} type="button"><div className={styles.profileAvatar}>OH</div><div className={styles.profileText}><strong>OpexSploit</strong><span>Visual demo</span></div><Settings2 size={15} /></button>
           </aside>
 
           <section className={styles.mainArea}>
@@ -258,7 +258,7 @@ export default function SecretWorkspace() {
           </section>
         </div>
       </section>
-      <div className={styles.desktopCaption}><span>OPEX HUB</span><span>PERSONAL WORKSPACE <span className={styles.statusDivider}>·</span> 2026</span></div>
+      <div className={styles.desktopCaption}><span>OPEXSPLOIT</span><span>PERSONAL WORKSPACE <span className={styles.statusDivider}>·</span> 2026</span></div>
     </main>
   )
 }

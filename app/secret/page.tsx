@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import SecretWorkspace from './secret-workspace'
 
 export const metadata: Metadata = {
-  title: 'Opex Hub · Secret Workspace',
-  description: 'A visual-only macOS-inspired Opex Hub workspace mockup.',
+  title: 'OpexSploit UI · Visual Demo',
+  description: 'A visual-only dark blue code workspace mockup for OpexSploit UI.',
   robots: { index: false, follow: false },
 }
 
