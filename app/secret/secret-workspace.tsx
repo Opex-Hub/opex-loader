@@ -115,6 +115,22 @@ function HomePanel({ onNavigate }: { onNavigate: (tab: TabId) => void }) {
         </button>
       </div>
 
+      <section className={styles.mockEditor} aria-label="Static code editor preview">
+        <div className={styles.mockEditorHeader}>
+          <div className={styles.mockEditorFile}><Code2 size={14} /><span>sample.lua</span><span className={styles.language}>Lua</span></div>
+          <div className={styles.mockEditorActions} aria-label="Inactive preview controls">
+            <button className={styles.mockEditorButton} type="button" disabled>Clear</button>
+            <button className={styles.mockEditorButton} type="button" disabled>Paste</button>
+            <button className={`${styles.mockEditorButton} ${styles.mockEditorPreview}`} type="button" disabled>Preview sample</button>
+          </div>
+        </div>
+        <div className={styles.mockEditorBody}>
+          <div className={styles.mockEditorLines} aria-hidden="true">1<br />2<br />3</div>
+          <pre className={styles.mockEditorCode}><code>{'-- Static sample\nprint("Hello, OpexSploit")\n-- No code executes'}</code></pre>
+        </div>
+        <div className={styles.mockEditorFooter}><span>VISUAL PREVIEW</span><span>No code runs or is saved</span></div>
+      </section>
+
       <div className={styles.statsGrid}>
         <div className={styles.statCard}><span className={styles.statLabel}>SAVED SNIPPETS</span><strong>03</strong><span className={styles.statFoot}><span className={styles.statAccent}>+1</span> this week</span><div className={`${styles.statOrb} ${styles.orbLavender}`}><FileCode2 size={17} /></div></div>
         <div className={styles.statCard}><span className={styles.statLabel}>COLLECTIONS</span><strong>02</strong><span className={styles.statFoot}>Organized your way</span><div className={`${styles.statOrb} ${styles.orbBlue}`}><FolderKanban size={17} /></div></div>
